@@ -1,0 +1,11 @@
+.places__item {
+  margin: 0 auto;
+  border-radius: 10px;
+  background: #fff;
+  max-width: 282px;
+  max-height: 361px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
+  justify-items: center;
+}

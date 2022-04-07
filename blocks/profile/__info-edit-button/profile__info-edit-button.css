@@ -1,0 +1,19 @@
+.profile__info-edit-button {
+  margin: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #fff;
+  align-self: center;
+  background-image: url(../../../images/edit_button.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #000;
+}
+
+@media all and (max-width: 330px) {
+  .profile__info-edit-button {
+    background-size: 5.25px;
+    width: 18px;
+    height: 18px;
+  }
+}

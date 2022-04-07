@@ -1,0 +1,12 @@
+.places__wrapper {
+  padding-top: 51px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(282px, 1fr));
+  gap: 20px 17px;
+}
+
+@media all and (max-width: 830px) {
+  .places__wrapper {
+    margin: 0 auto;
+  }
+}

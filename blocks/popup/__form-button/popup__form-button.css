@@ -1,0 +1,22 @@
+.popup__form-button {
+  margin: 18px 0 0 0;
+  padding: 0;
+  width: 100%;
+  min-height: 50px;
+  font-family: 'Inter', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #fff;
+  background: #000;
+  border-radius: 2px;
+  border: 0;
+}
+
+@media all and (max-width: 320px){
+  .popup__form-button {
+    min-height: 46px;
+  }
+}

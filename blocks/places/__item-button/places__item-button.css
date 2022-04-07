@@ -1,0 +1,12 @@
+.places__item-button {
+  margin: 0;
+  background-color: #fff;
+  border: 0;
+  align-self: center;
+  justify-self: end;
+  padding: 0 30px 0 0;
+}
+
+.places__item-button img {
+  margin: 0;
+}
