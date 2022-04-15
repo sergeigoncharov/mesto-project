@@ -1,23 +1,19 @@
 .popup__close {
+  background-image: url(../../../images/close_icon.svg);
+  background-size: cover;
+  padding: 0;
+  box-sizing: border-box;
   position: absolute;
   right: -30px;
   top: -30px;
   width: 32px;
   height: 32px;
+  background-color: #000;
+  border: none;
 }
 
-.popup__close {
-  opacity: 1;
-}
-
-.popup__close img {
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-}
-
-@media all and (max-width: 520px){
-  .popup__close{
+@media all and (max-width: 768px) {
+  .popup__close {
     width: 20px;
     height: 20px;
     right: 0;

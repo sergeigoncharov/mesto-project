@@ -1,16 +1,17 @@
 .profile__info-username {
   max-width: 294px;
   font-size: 42px;
-  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: 48px;
   margin: 0;
+  grid-area: username;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
 }
 
-@media all and (max-width: 330px) {
+@media all and (max-width: 768px) {
   .profile__info-username {
     text-align: center;
     font-size: 27px;

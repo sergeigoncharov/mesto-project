@@ -1,13 +1,16 @@
 .profile__info-job-description {
-  font-family: 'Inter', Arial, sans-serif;;
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
   margin: 0;
+  grid-area: job-description;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-@media all and (max-width: 330px) {
+@media all and (max-width: 768px) {
   .profile__info-job-description {
     text-align: center;
     font-size: 14px;

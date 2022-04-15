@@ -3,15 +3,10 @@
   align-items: center;
 }
 
-@media all and (max-width: 650px){
-  .profile{
+@media all and (max-width: 768px){
+  .profile {
     flex-direction: column;
     margin-bottom: 36px;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .profile {
-    row-gap: 30px;
+    row-gap: 26px;
   }
 }

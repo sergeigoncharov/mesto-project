@@ -6,15 +6,15 @@
   border: 2px solid #fff;
   border-radius: 2px;
   background-color: black;
-  background-image: url(../../../images/add_botton.png);
+  background-image: url(../../../images/add_button.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
 
-@media all and (max-width: 588px) {
+@media all and (max-width: 768px) {
   .profile__info-add-button {
     background-size: 16px;
-    margin: 0 auto 0 auto;
+    margin: 10px auto 0 auto;
     width: 282px;
   }
 }

@@ -2,11 +2,11 @@
   max-width: 880px;
   margin: 45px auto 40px auto;
   padding: 0 0 40px 0;
-  border-bottom: 1px solid #545454;
+  border-bottom: 1px solid rgba(54, 54, 54, .7);
 }
 
-@media all and (max-width: 900px){
+@media all and (max-width: 768px){
   .header{
-      padding-left: 27px;
+    margin-bottom: 42px;
   }
 }

@@ -12,6 +12,20 @@
   border-bottom: 1px solid rgb(0, 0, 0, .2);
 }
 
+.popup__form-input:nth-child(2) {
+  margin-bottom: 48px;
+}
+
 .popup__form-input:focus {
   outline: none;
+}
+
+@media all and (max-width: 768px) {
+  .popup__form-input:first-child {
+    margin-bottom: 30px;
+  }
+
+  .popup__form-input {
+    margin-bottom: 45px;
+  }
 }
