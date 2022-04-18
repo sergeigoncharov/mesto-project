@@ -8,6 +8,6 @@
 
 @media all and (max-width: 768px){
   .profile__info{
-      gap: 10px 14px;
+      gap: 5px 10px;
   }
 }

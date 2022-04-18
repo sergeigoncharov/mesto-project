@@ -4,7 +4,7 @@
   background: #fff;
   max-width: 282px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto;
-  justify-items: center;
+  grid-template-areas: 'img img'
+                        'title button';
+
 }

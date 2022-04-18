@@ -12,8 +12,10 @@
 
 @media all and (max-width: 768px) {
   .profile__info-job-description {
+    max-width: 282px;
     text-align: center;
     font-size: 14px;
     line-height: 17px;
+    margin: 0 auto;
   }
 }

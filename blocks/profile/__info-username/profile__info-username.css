@@ -13,6 +13,8 @@
 
 @media all and (max-width: 768px) {
   .profile__info-username {
+    max-width: 189px;
+    margin: 0 auto;
     text-align: center;
     font-size: 27px;
     line-height: 32.5px;

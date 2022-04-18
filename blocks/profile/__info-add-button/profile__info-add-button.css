@@ -9,12 +9,18 @@
   background-image: url(../../../images/add_button.svg);
   background-repeat: no-repeat;
   background-position: center;
+  cursor: pointer;
+  transition: opacity .1s linear;
+}
+
+.profile__info-add-button:hover {
+  opacity: 0.6;
 }
 
 @media all and (max-width: 768px) {
   .profile__info-add-button {
     background-size: 16px;
-    margin: 10px auto 0 auto;
+    margin: 8px auto 0 auto;
     width: 282px;
   }
 }

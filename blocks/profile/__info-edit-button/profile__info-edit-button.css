@@ -9,6 +9,12 @@
   background-position: center;
   background-repeat: no-repeat;
   background-color: #000;
+  cursor: pointer;
+  transition: opacity .1s linear;
+}
+
+.profile__info-edit-button:hover {
+  opacity: 0.6;
 }
 
 @media all and (max-width: 768px) {

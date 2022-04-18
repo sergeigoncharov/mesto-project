@@ -1,8 +1,14 @@
 .places__item-button {
   margin: 0;
-  background-color: #fff;
   border: 0;
   align-self: center;
   justify-self: end;
-  padding: 0 30px 0 0;
+  padding: 5px 20px 0 0;
+  grid-area: button;
+  cursor: pointer;
+  transition: opacity .1s linear;
+}
+
+.places__item-button:hover {
+  opacity: 0.5;
 }
