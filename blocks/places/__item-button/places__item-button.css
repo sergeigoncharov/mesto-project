@@ -7,6 +7,7 @@
   grid-area: button;
   cursor: pointer;
   transition: opacity .1s linear;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .places__item-button:hover {
