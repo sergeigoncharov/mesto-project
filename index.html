@@ -19,71 +19,27 @@
         <img class="profile__avatar" src="./images/avatar.jpg" alt="Аватар">
         <div class="profile__info">
           <h1 class="profile__info-username">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat cumque eveniet similique. Necessitatibus fuga aliquam vitae
+            Филипп Киркоров
           </h1>
           <button type="button" aria-label="Имя" class="profile__info-edit-button"></button>
           <p class="profile__info-job-description">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat cumque eveniet similique. Necessitatibus fuga aliquam vitae
+            Жар-Птица
           </p>
         </div>
         <button type="button" class="profile__info-add-button"></button>
       </section>
       <section class="places">
         <div class="places__wrapper">
-          <div class="places__item">
-            <img class="places__item-img" src="https://cat4you.ru/wp-content/uploads/f/1/3/f13aa960a62bb900665c2fa6b0b29161.jpeg" alt="Домбай">
-            <h2 class="places__item-title">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat cumque eveniet similique. Necessitatibus fuga aliquam vitae
-            </h2>
-            <button type="button" class="places__item-button">
-              <img src="./images/heart.svg" alt="Лайк">
-            </button>
-          </div>
-          <div class="places__item">
-            <img class="places__item-img" src="./images/dombay.jpg" alt="Домбай">
-            <h2 class="places__item-title">
-              Домбай
-            </h2>
-            <button type="button" class="places__item-button">
-              <img src="./images/heart.svg" alt="Лайк">
-            </button>
-          </div>
-          <div class="places__item">
-            <img class="places__item-img" src="./images/dombay.jpg" alt="Домбай">
-            <h2 class="places__item-title">
-              Домбай
-            </h2>
-            <button type="button" class="places__item-button">
-              <img src="./images/heart.svg" alt="Лайк">
-            </button>
-          </div>
-          <div class="places__item">
-            <img class="places__item-img" src="./images/dombay.jpg" alt="Домбай">
-            <h2 class="places__item-title">
-              Домбай
-            </h2>
-            <button type="button" class="places__item-button">
-              <img src="./images/heart.svg" alt="Лайк">
-            </button>
-          </div>
-          <div class="places__item">
-            <img class="places__item-img" src="./images/dombay.jpg" alt="Домбай">
-            <h2 class="places__item-title">
-              Домбай
-            </h2>
-            <button type="button" class="places__item-button">
-              <img src="./images/heart.svg" alt="Лайк">
-            </button>
-          </div>
-          <div class="places__item">
-            <img class="places__item-img" src="./images/dombay.jpg" alt="Домбай">
-            <h2 class="places__item-title">
-              Домбай
-            </h2>
-            <button type="button" class="places__item-button">
-              <img src="./images/heart.svg" alt="Лайк">
-            </button>
-          </div>
+          <template id="places__item">
+            <div class="places__item">
+              <img class="places__item-img" src="./images/dombay.jpg" alt="Фотография места">
+              <h2 class="places__item-title">
+                Домбай
+              </h2>
+              <button id="like-button" type="button" class="places__item-button"></button>
+              <button id="trash-button" type="button" class="places__trash-button"></button>
+            </div>
+          </template>
         </div>
       </section>
     </main>
@@ -93,20 +49,44 @@
       </p>
     </footer>
   </div>
-  <section class="popup">
+  <section id="edit-profile" class="popup">
     <div class="popup__content">
-      <button type="button" class="popup__close"></button>
-      <form name="popup_form_edit_profile" class="popup__form">
+      <button id="edit-profile-close" type="button" class="popup__close"></button>
+      <form id="popup_form_edit_profile" name="popup_form_edit_profile" class="popup__form">
         <h2 class="popup__title">
           Редактировать профиль
         </h2>
         <fieldset class="popup__form-items">
-          <input name="popup_input_edit_profile_username" class="popup__form-input" type="text" value="Жак-Ив Кусто" placeholder="Введите имя">
-          <input name="popup_input_edit_profile_job-description" class="popup__form-input" type="text" value="Исследователь океана" placeholder="Укажите занятие">
+          <input id="popup_input_edit_profile_username" name="popup_input_edit_profile_username" class="popup__form-input" type="text" value="Жак-Ив Кусто" placeholder="Введите имя">
+          <input id="popup_input_edit_profile_job-description" name="popup_input_edit_profile_job-description" class="popup__form-input" type="text" value="Исследователь океана" placeholder="Укажите занятие">
           <button type="submit" class="popup__form-button">Сохранить</button>
         </fieldset>
       </form>
     </div>
   </section>
+  <section id="add-place" class="popup">
+    <div class="popup__content">
+      <button id="add-place-close" type="button" class="popup__close"></button>
+      <form id="popup_form_add_place" name="popup_form_add_place" class="popup__form">
+        <h2 class="popup__title">
+          Новое место
+        </h2>
+        <fieldset class="popup__form-items">
+          <input id="popup_input_add_place_name" name="popup_input_add_place_name" class="popup__form-input" type="text" placeholder="Название">
+          <input id="popup_input_add_place_link" name="popup_input_add_place_link" class="popup__form-input" type="text" placeholder="Ссылка на картинку">
+          <button type="submit" class="popup__form-button">Создать</button>
+        </fieldset>
+      </form>
+    </div>
+  </section>
+  <section id="open-place" class="popup">
+    <div class="popup__container">
+      <button id="open-place-close" type="button" class="popup__close"></button>
+      <img class="popup__img" src=" " alt=" ">
+      <p class="popup__description"></p>
+    </div>
+
+  </section>
+  <script src="./script/script.js"></script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+.places__item-button_enable {
+  opacity: 1;
+  background: url(../../../../images/like_enable.svg) center no-repeat;
+}

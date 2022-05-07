@@ -1,9 +1,11 @@
 .places__item {
+  position: relative;
   margin: 0 auto;
   border-radius: 10px;
   background: #fff;
   max-width: 282px;
   display: grid;
+  grid-template-columns: 3fr 1fr;
   grid-template-areas: 'img img'
                         'title button';
 

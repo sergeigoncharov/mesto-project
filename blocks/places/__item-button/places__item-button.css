@@ -2,12 +2,15 @@
   margin: 0;
   border: 0;
   align-self: center;
-  justify-self: end;
-  padding: 5px 20px 0 0;
+  justify-self: center;
+  padding: 0;
+  height: 19px;
+  width: 22px;
   grid-area: button;
   cursor: pointer;
+  background: url(../../../images/like_disable.svg) center no-repeat;
+  background-size: 100%;
   transition: opacity .1s linear;
-  background-color: rgba(0, 0, 0, 0);
 }
 
 .places__item-button:hover {
