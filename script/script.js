@@ -6,111 +6,105 @@ const profileNameEdit = document.querySelector('#popup_input_edit_profile_userna
 const profileJob = document.querySelector('.profile__info-job-description');
 const profileJobEdit = document.querySelector('#popup_input_edit_profile_job-description');
 
-//функция, которая показывает или убирает класс popup_opened для попапа редактирования профиля
-const popupActionEditProfile = function () {
-  const popupToggle = document.querySelector('#edit-profile');
-  popupToggle.classList.toggle('popup_opened');
+//переменная для попапа редактирования профиля
+const popupEditProfile = document.querySelector('#edit-profile');
+
+function popupActionOpen (popup) {
+  popup.classList.add('popup_opened');
 };
 
-//функция, которая показывает или убирает класс popup_opened для попапа добавления места
-const popupActionAddPlace = function () {
-  const popupToggle = document.querySelector('#add-place');
-  popupToggle.classList.toggle('popup_opened');
+function popupActionClose (popup) {
+  popup.classList.remove('popup_opened');
 };
+
+//октрываем окно редактирования профиля
+const openProfileEditButton = document.querySelector('.profile__info-edit-button');
+openProfileEditButton.addEventListener('click', function () {
+  popupActionOpen(popupEditProfile)
+});
+
+//закрываем окно редактирования профиля
+const closeProfileEditButton = document.querySelector('#edit-profile-close');
+closeProfileEditButton.addEventListener('click', function () {
+  popupActionClose(popupEditProfile)
+});
 
 //функция, которая в попап вставляет имя и занятие со страницы
-const postNameAndJobInPopup = function() {
-  // проверяем, что попап открыт
-  const checkPopupOpen = document.querySelector('.popup_opened');
-  if (checkPopupOpen !== true) {
-    // trim убирает пробелы при переносе значения в поле
+const fillInFormInputs = function() {
+  if (popupEditProfile !== true) {
     profileNameEdit.value = profileName.textContent.trim();
     profileJobEdit.value = profileJob.textContent.trim();
-  } else {
-      console.log('попап закрыт');
-    };
+  };
 };
 
+//вызываем функцию, которая в попап вставляет имя и занятие со страницы
+openProfileEditButton.addEventListener('click', fillInFormInputs);
+
 //функция, которая из попапа вставляет имя и занятие на страницу
-function formEditProfleSubmit (evt) {
+function submitEditProfileForm (evt) {
   //сбрасываем браузерные настройки отправки формы
   evt.preventDefault();
   profileName.textContent = profileNameEdit.value;
   profileJob.textContent = profileJobEdit.value;
 
   //закрываем попап
-  popupActionEditProfile();
+  popupActionClose(popupEditProfile);
 };
 
-//октрываем окно редактирования профиля
-const openProfileEditButton = document.querySelector('.profile__info-edit-button');
-openProfileEditButton.addEventListener('click', popupActionEditProfile);
+//переменная кнопки для попапа добавления карточки места
+const popupAddCard = document.querySelector('#add-place');
 
 //открываем окно добавления места
 const openAddPlaceButton = document.querySelector('.profile__info-add-button');
-openAddPlaceButton.addEventListener('click', popupActionAddPlace);
-
-//вызываем функцию, которая в попап вставляет имя и занятие со страницы
-openProfileEditButton.addEventListener('click', postNameAndJobInPopup);
-
-//закрываем окно редактирования профиля
-const closeProfileEditButton = document.querySelector('#edit-profile-close');
-closeProfileEditButton.addEventListener('click', popupActionEditProfile);
+openAddPlaceButton.addEventListener('click', function () {
+  popupActionOpen(popupAddCard)
+});
 
 //закрываем окно добавления места
 const closeAddPlaceButton = document.querySelector('#add-place-close');
-closeAddPlaceButton.addEventListener('click', popupActionAddPlace);
+closeAddPlaceButton.addEventListener('click', function () {
+  popupActionClose(popupAddCard)
+});
+
+//переменные с именем и ссылкой для добавления карточки
+const popupNamePlaceValue = document.querySelector('#popup_input_add_place_name');
+const popupLinkPlaceValue = document.querySelector('#popup_input_add_place_link');
+
+//функция, которая добавляет место на страницу
+function submitAddCardForm (evt) {
+  const namePlace = popupNamePlaceValue.value;
+  const linkPlace = popupLinkPlaceValue.value;
+  //сбрасываем браузерные настройки отправки формы
+  evt.preventDefault();
+  //вызываем функцию добавления карточки на страницу
+  createPlacesItemElement (namePlace, linkPlace);
+  //закрываем попап
+  popupActionClose(popupAddCard);
+};
+
+//переменная для смены активности попапа картинки
+const popupZoomImage = document.querySelector('#open-place')
 
 //находим форму попапа редактирования профиля
 const formEditProfileElement = document.querySelector('#popup_form_edit_profile');
 
 //сохраняем попап редактирования профиля
-formEditProfileElement.addEventListener('submit', formEditProfleSubmit);
+formEditProfileElement.addEventListener('submit', submitEditProfileForm);
 
-const initialCards = [
-  {
-    name: "Архыз",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
-  },
-  {
-    name: "Челябинская область",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
-  },
-  {
-    name: "Иваново",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
-  },
-  {
-    name: "Камчатка",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
-  },
-  {
-    name: "Холмогорский район",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
-  },
-  {
-    name: "Байкал",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
-  },
-];
+//находим родителя карточки
+const placesItemWrapper = document.querySelector('.places__wrapper');
 
 //функция, которая принимает на входи title и img и вставляет в заготовку карточки
 const createPlacesItemElement = function(title, img) {
   //находим tamplate карточки
   const placesItemTemplate = document.querySelector('#places__item').content;
-  //находим родителя карточки
-  const placesItemWrapper = document.querySelector('.places__wrapper');
+
   //находим карточку и клонируем
   const elementPlacesItem = placesItemTemplate.querySelector('.places__item').cloneNode(true);
 
   elementPlacesItem.querySelector('.places__item-title').textContent = title;
   elementPlacesItem.querySelector('.places__item-img').src = img;
+  elementPlacesItem.querySelector('.places__item-img').alt = title;
 
   //слушаем кнопку с лайком и если на неё клацнули меняем состояние лайка
   elementPlacesItem.querySelector('.places__item-button').addEventListener('click', function(evt) {
@@ -122,50 +116,37 @@ const createPlacesItemElement = function(title, img) {
     evt.target.closest('.places__item').remove();
   });
 
+  //переменные для изображения и описания в попапе картинки карточки
+  const popupImage = document.querySelector('.popup__img');
+  const popupImageDescription = document.querySelector('.popup__description')
+
   //слушаем картинку на странице и если на неё клацнули, то открывем попап
   elementPlacesItem.querySelector('.places__item-img').addEventListener('click', function() {
-    const popupImgage = document.querySelector('.popup__img');
-    const popupImageDescription = document.querySelector('.popup__description')
-    popupImgage.src = img;
-    popupImgage.alt = title;
+    popupImage.src = img;
+    popupImage.alt = title;
     popupImageDescription.textContent = title;
-    popupActionOpenImgPlace(createPlacesItemElement);
+    popupActionOpen(popupZoomImage);
   });
 
-  //добавляем карточку на страницу
-  placesItemWrapper.prepend(elementPlacesItem);
+  return elementPlacesItem;
+
 };
 
 //перебираем массив и передаем из него имя и ссылку в заготовку карточки
+//после чего добавляем карточку
 initialCards.forEach((card) => {
-  createPlacesItemElement(card.name, card.link);
+  const result = createPlacesItemElement(card.name, card.link);
+  placesItemWrapper.prepend(result);
 });
-
-//функция которая меняет активность попапа с картинкой
-const popupActionOpenImgPlace = function () {
-  const popupToggle = document.querySelector('#open-place');
-  popupToggle.classList.toggle('popup_opened');
-};
 
 //закрываем попап с картинкой
 const closeImgPlaceButton = document.querySelector('#open-place-close');
-closeImgPlaceButton.addEventListener('click', popupActionOpenImgPlace);
-
-
-//функция, которая добавляет место на страницу
-function formAddPlaceSubmit (evt) {
-  const namePlace = document.querySelector('#popup_input_add_place_name').value;
-  const linkPlace = document.querySelector('#popup_input_add_place_link').value;
-  //сбрасываем браузерные настройки отправки формы
-  evt.preventDefault();
-  //вызываем функцию добавления карточки на страницу
-  createPlacesItemElement (namePlace, linkPlace);
-  //закрываем попап
-  popupActionAddPlace();
-};
+closeImgPlaceButton.addEventListener('click', function () {
+  popupActionClose(popupZoomImage)
+});
 
 //находим форму попапа добавления места
 const formAddPlaceElement = document.querySelector('#popup_form_add_place');
 
 //сохраняем попап добавления места
-formAddPlaceElement.addEventListener('submit', formAddPlaceSubmit);
+formAddPlaceElement.addEventListener('submit', submitAddCardForm);
