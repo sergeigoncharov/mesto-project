@@ -20,6 +20,7 @@ function popupActionClose (popup) {
 //октрываем окно редактирования профиля
 const openProfileEditButton = document.querySelector('.profile__info-edit-button');
 openProfileEditButton.addEventListener('click', function () {
+  fillInFormInputs();
   popupActionOpen(popupEditProfile)
 });
 
@@ -31,14 +32,9 @@ closeProfileEditButton.addEventListener('click', function () {
 
 //функция, которая в попап вставляет имя и занятие со страницы
 const fillInFormInputs = function() {
-  if (popupEditProfile !== true) {
-    profileNameEdit.value = profileName.textContent.trim();
-    profileJobEdit.value = profileJob.textContent.trim();
-  };
+  profileNameEdit.value = profileName.textContent.trim();
+  profileJobEdit.value = profileJob.textContent.trim();
 };
-
-//вызываем функцию, которая в попап вставляет имя и занятие со страницы
-openProfileEditButton.addEventListener('click', fillInFormInputs);
 
 //функция, которая из попапа вставляет имя и занятие на страницу
 function submitEditProfileForm (evt) {
@@ -77,7 +73,8 @@ function submitAddCardForm (evt) {
   //сбрасываем браузерные настройки отправки формы
   evt.preventDefault();
   //вызываем функцию добавления карточки на страницу
-  createPlacesItemElement (namePlace, linkPlace);
+  const addNewCard = createPlacesItemElement(namePlace, linkPlace);
+  placesItemWrapper.prepend(addNewCard);
   //закрываем попап
   popupActionClose(popupAddCard);
 };
@@ -94,6 +91,10 @@ formEditProfileElement.addEventListener('submit', submitEditProfileForm);
 //находим родителя карточки
 const placesItemWrapper = document.querySelector('.places__wrapper');
 
+//переменные для изображения и описания в попапе картинки карточки
+const popupImage = document.querySelector('.popup__img');
+const popupImageDescription = document.querySelector('.popup__description')
+
 //функция, которая принимает на входи title и img и вставляет в заготовку карточки
 const createPlacesItemElement = function(title, img) {
   //находим tamplate карточки
@@ -101,10 +102,12 @@ const createPlacesItemElement = function(title, img) {
 
   //находим карточку и клонируем
   const elementPlacesItem = placesItemTemplate.querySelector('.places__item').cloneNode(true);
+  const elementPlaceItemTitle = elementPlacesItem.querySelector('.places__item-title');
+  const elementPlaceItemImg = elementPlacesItem.querySelector('.places__item-img');
 
-  elementPlacesItem.querySelector('.places__item-title').textContent = title;
-  elementPlacesItem.querySelector('.places__item-img').src = img;
-  elementPlacesItem.querySelector('.places__item-img').alt = title;
+  elementPlaceItemTitle.textContent = title;
+  elementPlaceItemImg.src = img;
+  elementPlaceItemImg.alt = title;
 
   //слушаем кнопку с лайком и если на неё клацнули меняем состояние лайка
   elementPlacesItem.querySelector('.places__item-button').addEventListener('click', function(evt) {
@@ -115,10 +118,6 @@ const createPlacesItemElement = function(title, img) {
   elementPlacesItem.querySelector('.places__trash-button').addEventListener('click', function(evt) {
     evt.target.closest('.places__item').remove();
   });
-
-  //переменные для изображения и описания в попапе картинки карточки
-  const popupImage = document.querySelector('.popup__img');
-  const popupImageDescription = document.querySelector('.popup__description')
 
   //слушаем картинку на странице и если на неё клацнули, то открывем попап
   elementPlacesItem.querySelector('.places__item-img').addEventListener('click', function() {
@@ -136,7 +135,7 @@ const createPlacesItemElement = function(title, img) {
 //после чего добавляем карточку
 initialCards.forEach((card) => {
   const result = createPlacesItemElement(card.name, card.link);
-  placesItemWrapper.prepend(result);
+  placesItemWrapper.append(result);
 });
 
 //закрываем попап с картинкой
