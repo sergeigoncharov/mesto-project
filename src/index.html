@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Место</title>
-  <link rel="stylesheet" href="./pages/index.css">
+  <!-- <link rel="stylesheet" href="./pages/index.css"> -->
   <meta name="description" content="Проект Место">
   <meta name="keywords" content="Места">
   <meta name="author" content="Серёжа Гончаров">
@@ -19,11 +19,9 @@
         <img class="profile__avatar" src="./images/avatar.jpg" alt="Аватар">
         <div class="profile__info">
           <h1 class="profile__info-username">
-            Филипп Киркоров
           </h1>
           <button id="profile__info-edit-button" type="button" aria-label="Имя" class="profile__info-edit-button"></button>
           <p class="profile__info-job-description">
-            Жар-Птица
           </p>
         </div>
         <button type="button" class="profile__info-add-button"></button>
@@ -57,9 +55,11 @@
           Редактировать профиль
         </h2>
         <fieldset class="popup__form-items">
-          <input id="popup_input_edit_profile_username" name="popup_input_edit_profile_username" class="popup__form-input" type="text" value="Жак-Ив Кусто" placeholder="Введите имя">
-          <input id="popup_input_edit_profile_job-description" name="popup_input_edit_profile_job-description" class="popup__form-input" type="text" value="Исследователь океана" placeholder="Укажите занятие">
-          <button type="submit" class="popup__form-button">Сохранить</button>
+          <input id="popup_input_edit_profile_username" name="popup_input_edit_profile_username" class="popup__form-input" type="text" value="Жак-Ив Кусто" placeholder="Введите имя" required minlength="2" maxlength="40">
+          <span id="popup_input_edit_profile_username-error" class="popup__error-span"></span>
+          <input id="popup_input_edit_profile_job-description" name="popup_input_edit_profile_job-description" class="popup__form-input" type="text" value="Исследователь океана" placeholder="Укажите занятие" required minlength="2" maxlength="200">
+          <span id="popup_input_edit_profile_job-description-error" class="popup__error-span"></span>
+          <button id="edit_profile_button" type="submit" class="popup__form-button">Сохранить</button>
         </fieldset>
       </form>
     </div>
@@ -67,14 +67,16 @@
   <section id="add-place" class="popup">
     <div class="popup__content">
       <button id="add-place-close" type="button" class="popup__close"></button>
-      <form id="popup_form_add_place" name="popup_form_add_place" class="popup__form">
+      <form id="popup_form_add_place" name="popup_form_add_place" class="popup__form" novalidate>
         <h2 class="popup__title">
           Новое место
         </h2>
         <fieldset class="popup__form-items">
-          <input id="popup_input_add_place_name" name="popup_input_add_place_name" class="popup__form-input" type="text" placeholder="Название">
-          <input id="popup_input_add_place_link" name="popup_input_add_place_link" class="popup__form-input" type="text" placeholder="Ссылка на картинку">
-          <button type="submit" class="popup__form-button">Создать</button>
+          <input id="popup_input_add_place_name" name="popup_input_add_place_name" class="popup__form-input" type="text" placeholder="Название" required minlength="2" maxlength="30">
+          <span id="popup_input_add_place_name-error" class="popup__error-span"></span>
+          <input id="popup_input_add_place_link" name="popup_input_add_place_link" class="popup__form-input" type="url" placeholder="Ссылка на картинку" required>
+          <span id="popup_input_add_place_link-error" class="popup__error-span"></span>
+          <button id="add_place_button" type="submit" class="popup__form-button">Создать</button>
         </fieldset>
       </form>
     </div>
@@ -87,8 +89,8 @@
     </div>
 
   </section>
-  <script src="./scripts/initial-сards.js"></script>
-  <script src="./scripts/index.js"></script>
+  <!-- <script type="module" src="./index.js"></script> -->
 
 </body>
 </html>
+
