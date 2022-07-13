@@ -3,3 +3,6 @@
   margin-bottom: 0px;
 }
 
+.popup__form-input_error:first-child {
+  margin-bottom: 0px;
+}

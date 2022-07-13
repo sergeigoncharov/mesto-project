@@ -18,6 +18,8 @@ const showInputError = (formElement, inputElement, errorMessage, config) => {
   // Заменим содержимое span с ошибкой на переданный параметр
   errorElement.textContent = errorMessage;
   errorElement.classList.add(config.errorClass);
+  //показываем dom-элемент ошибки в попапе
+  errorElement.removeAttribute('hidden')
 };
 
 //функция, которая убирает ошибку, стиль ошибки и сообещение об ошибке
@@ -29,6 +31,8 @@ const hideInputError = (formElement, inputElement, config) => {
   errorElement.classList.remove(config.errorClass);
   // Очистим ошибку
   errorElement.textContent = '';
+  //скрываем dom-элемент ошибки в попапе
+  errorElement.setAttribute('hidden', true)
 };
 
 //функция, которая проверяет, что поля в форме прошли валидацию

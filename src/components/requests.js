@@ -1,9 +1,11 @@
 import { profileName, profileJob, profileAvatar } from "./modal.js";
-import { createPlacesItemElement, placesItemWrapper } from "./card.js";
+import { createPlacesItemElement, placesItemWrapper, renderDeleteButtonCard } from "./card.js";
 
 const cohort = 'plus-cohort-12';
+const placesRenderError = document.querySelector('#places-load-error');
 
-function setProfileDesctiprion (cohort) {
+//загружаем профиль с сервера
+const getProfile = function (cohort) {
   fetch(`https://nomoreparties.co/v1/${cohort}/users/me`, {
     headers: {
       authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a'
@@ -36,6 +38,7 @@ function renderProfileDesctiprion(name, about, avatarLink) {
   // error.textContent = '';
 }
 
+//рисуем ошибку, если с данными беда
 function renderProfileDesctiprionError(err) {
   profileName.textContent = err;
   profileJob.textContent = err;
@@ -44,117 +47,144 @@ function renderProfileDesctiprionError(err) {
 }
 
 
-// function initialCard (cohort) {
-//   fetch(`https://nomoreparties.co/v1/${cohort}/cards`, {
-//     headers: {
-//       authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a'
-//     }
-//   })
 
-//   .then((res) => {
-//     if (res.ok) {
-//       return res.json();
-//     }
-//       return Promise.reject(res.status);
-//   })
+//загружаем карточки с сервера
+const getCards = function (cohort) {
+  fetch(`https://nomoreparties.co/v1/${cohort}/cards`, {
+    headers: {
+      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a'
+    }
+  })
 
+  .then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+      return Promise.reject(res.status);
+  })
+
+  .then((data) => {
+    return data.forEach((data) => {
+      const result = createPlacesItemElement(data.name, data.link, data.likes.length);
+      placesItemWrapper.append(result);
+      renderDeleteButtonCard(data.owner._id)
+    });
+  })
+
+  .catch((err) => {
+    renderCardError(`Ошибка загрузки: ${err}`)
+  })
+
+}
+
+// console.log(initialCard)
+
+//отрисовываем ошибку если всё плохо
+function renderCardError(err) {
+  placesRenderError.removeAttribute('hidden')
+  placesRenderError.textContent = err;
+}
+
+//постим на сервер изменения профиля
+const editProfile = function (cohort, name, job) {
+  fetch(`https://nomoreparties.co/v1/${cohort}/users/me`, {
+    method: 'PATCH',
+    headers: {
+      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: `${name}`,
+      about: `${job}`
+    })
+  });
+}
+
+//постим карточки на сервер
+const postCardRequest = function (cohort, name, link) {
+  fetch(`https://nomoreparties.co/v1/${cohort}/cards`, {
+    method: 'POST',
+    headers: {
+      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: `${name}`,
+      link: `${link}`
+    })
+  });
+}
+
+const deleteCardRequest = function (cohort, id) {
+  fetch(`https://nomoreparties.co/v1/${cohort}/cards/${id}`, {
+    method: 'DELETE',
+    headers: {
+      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
+      'Content-Type': 'application/json'
+    }
+})};
+
+const putLikeCardRequest = function (cohort, id) {
+  fetch(`https://nomoreparties.co/v1/${cohort}/cards/likes/${id}`, {
+    method: 'PUT',
+    headers: {
+      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
+      'Content-Type': 'application/json'
+    }
+})
+  .then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+      return Promise.reject(res.status);
+  })
+
+  .then((data) => {
+    data.likes.length
+  })
+
+  .catch((err) => {
+    renderCardError(`Ошибка загрузки: ${err}`)
+  })
+};
+
+const deleteLikeCardRequest = function (cohort, id) {
+  fetch(`https://nomoreparties.co/v1/${cohort}/cards/likes/${id}`, {
+    method: 'DELETE',
+    headers: {
+      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
+      'Content-Type': 'application/json'
+    }})
+
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+        return Promise.reject(res.status);
+
+    })
+
+    .then((data) => {
+      data.likes.length
+
+    })
+
+    .catch((err) => {
+      renderCardError(`Ошибка загрузки: ${err}`)
+    })
+};
+
+// const userAndCardId = [setProfileDesctiprion, initialCard]
+// Promise.all(userAndCardId)
 //   .then((data) => {
-//     data.forEach((data) => {
-//       const result = createPlacesItemElement(card.name, card.link);
-//       placesItemWrapper.append(result);
-//     });
+//     console.log(data);
 //   })
 
-//   .catch((err) => {
-//     renderProfileDesctiprionError(err)
-//   })
 
-// }
+// await putLikeCardRequest(cohort, '62cbf1c5bdb1f00a9f09a5b2')
+// await deleteLikeCardRequest(cohort, '62cbf1c5bdb1f00a9f09a5b2')
 
-// function renderProfileDesctiprion(name, about, avatarLink) {
-//   profileName.textContent = name;
-//   profileJob.textContent = about;
-//   profileAvatar.src = avatarLink;
-//   profileAvatar.alt = name;
-//   // error.textContent = '';
-// }
+getCards(cohort)
+getProfile(cohort)
 
-// initialCard(cohort)
-setProfileDesctiprion(cohort)
-
-
-// fetch('https://mesto.nomoreparties.co/v1/plus-cohort-12/cards', {
-//   headers: {
-//     authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a'
-//   }
-// })
-//   .then(res => res.json())
-//   .then((result) => {
-//     console.log(result);
-//   });
-
-
-// const form = document.forms.search;
-// const content = document.querySelector('.content');
-// const result = document.querySelector('.content__result');
-// const error = document.querySelector('.content__error');
-// const spinner = document.querySelector('.spinner');
-
-// //функция принимает на вход два параметра: entity и entityId, и генерирует fetch-запрос
-// //и возвращает промис — результат работы этого запроса
-// function search(entity, entityId) {
-//   return fetch(`https://swapi.nomoreparties.co/${entity}/${entityId}/`);
-// }
-
-// //функция, которая добавляет класс с прелоадером или убирает, если isLoadiing = false
-// function renderLoading(isLoading) {
-//   if(isLoading) {
-//     spinner.classList.add('spinner_visible');
-//     content.classList.add('content_hidden');
-//   } else {
-//     spinner.classList.remove('spinner_visible');
-//     content.classList.remove('content_hidden');
-//   }
-// }
-
-// //выводить результат, если данные пришли и всё хорошо
-// function renderResult(text) {
-//   result.textContent = text;
-//   error.textContent = '';
-// }
-
-// //выводить ошибку, если что-то пошло не так
-// function renderError(err) {
-//   error.textContent = err;
-//   result.textContent = '';
-// }
-
-// //обработчик события нажатия на кнопку Submit
-// //отправляет запрос на сервер при нажатии на кнопку
-// form.addEventListener('submit', function submit(e) {
-//   e.preventDefault();
-//   //показываем прелоадер пока выполняется поиск
-//   renderLoading(true);
-//   //вызваем функцию search с двумя аргументами: значениями полей entity и entityId
-//   search(form.elements.entity.value, form.elements.entityId.value)
-//     .then((res) => {
-    //   //Если res.ok — true, следующий обработчик then получит объект ответа на вход
-    //   if (res.ok) {
-    //     return res.json();
-    //   }
-    //   //если с ответом что-то не так, промис отклонится с кодом статуса ответа
-    //   return Promise.reject(res.status);
-    // })
-//     .then((res) => {
-//       //если всё ГУД вызываем функцию renderResult и подставляем поле имя из объекта в текст класса result
-//       renderResult(res.name);
-//     })
-    // .catch((err) => {
-    //   //если всё плохо вызываем функцию renderError и подставляем в текст класса result ошибку с кодом
-    //   renderError(`Ошибка: ${err}`);
-//     })
-//   .finally(() => {
-//     //после обработки скрываем прелоадер
-//     renderLoading(false);
-//   })
-// });
+export { editProfile, cohort, postCardRequest, putLikeCardRequest, deleteLikeCardRequest }

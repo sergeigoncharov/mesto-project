@@ -1,0 +1,13 @@
+.places__item-like-number {
+  margin: 0;
+  align-self: center;
+  justify-self: center;
+  padding-top: 23px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  grid-area: button;
+  color: #000000;
+}

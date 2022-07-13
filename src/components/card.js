@@ -1,11 +1,14 @@
 //функции для работы с карточками
 
-import { initialCards } from "./initial-cards.js";
-import { popupActionOpen, popupActionClose, popupZoomImage, popupAddCard } from "./modal.js";
+import { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, formAddPlaceElement } from "./modal.js";
+import { cohort, postCardRequest, putLikeCardRequest, deleteLikeCardRequest } from "./requests.js"
 
 //переменные для изображения и описания в попапе картинки карточки
 const popupImage = document.querySelector('.popup__img');
 const popupImageDescription = document.querySelector('.popup__description')
+
+//находим tamplate карточки
+const placesItemTemplate = document.querySelector('#places__item').content;
 
 //находим родителя карточки
 const placesItemWrapper = document.querySelector('.places__wrapper');
@@ -14,23 +17,35 @@ const placesItemWrapper = document.querySelector('.places__wrapper');
 const popupNamePlaceValue = document.querySelector('#popup_input_add_place_name');
 const popupLinkPlaceValue = document.querySelector('#popup_input_add_place_link');
 
+
 //функция, которая принимает на входи title и img и вставляет в заготовку карточки
-const createPlacesItemElement = function(title, img) {
-  //находим tamplate карточки
-  const placesItemTemplate = document.querySelector('#places__item').content;
+const createPlacesItemElement = function(title, img, likes) {
 
   //находим карточку и клонируем
   const elementPlacesItem = placesItemTemplate.querySelector('.places__item').cloneNode(true);
   const elementPlaceItemTitle = elementPlacesItem.querySelector('.places__item-title');
   const elementPlaceItemImg = elementPlacesItem.querySelector('.places__item-img');
 
+  //находим класс с циферкой для лайка
+  const elementPlaceLike = elementPlacesItem.querySelector('.places__item-like-number');
+
   elementPlaceItemTitle.textContent = title;
   elementPlaceItemImg.src = img;
   elementPlaceItemImg.alt = title;
+  elementPlaceLike.textContent = likes;
 
   //слушаем кнопку с лайком и если на неё клацнули меняем состояние лайка
   elementPlacesItem.querySelector('.places__item-button').addEventListener('click', function(evt) {
     evt.target.classList.toggle('places__item-button_enable');
+    if (elementPlacesItem.querySelector('.places__item-button_enable')) {
+      putLikeCardRequest(cohort, '62cbf1c5bdb1f00a9f09a5b2')
+      elementPlaceLike.textContent = likes;
+    }
+
+       else {
+        deleteLikeCardRequest(cohort, '62cbf1c5bdb1f00a9f09a5b2')
+        elementPlaceLike.textContent = likes;
+      }
   });
 
   //слушаем кнопку с корзинкой и если на неё клацнули удалем карточку
@@ -43,12 +58,23 @@ const createPlacesItemElement = function(title, img) {
     popupImage.src = img;
     popupImage.alt = title;
     popupImageDescription.textContent = title;
-    popupActionOpen(popupZoomImage);
+    openPopupAction(popupZoomImage);
   });
 
   return elementPlacesItem;
 
 };
+
+const renderDeleteButtonCard = function (id) {
+  const profileId ='61d01a9944878b71edfe84ba'
+  const trashButton = document.querySelector('#trash-button')
+  if (id !== profileId) {
+    trashButton.remove()
+  } else {
+    trashButton.classList.add('.places__item-button_enable')
+  }
+}
+
 
 //функция, которая добавляет карточку на страницу
 function submitAddCardForm (evt) {
@@ -59,22 +85,11 @@ function submitAddCardForm (evt) {
   //вызываем функцию добавления карточки на страницу
   const addNewCard = createPlacesItemElement(namePlace, linkPlace);
   placesItemWrapper.prepend(addNewCard);
+  postCardRequest (cohort, namePlace, linkPlace);
+  formAddPlaceElement.reset();
   //закрываем попап
-  popupActionClose(popupAddCard);
+  closePopupAction(popupAddCard);
 };
 
-//перебираем массив и передаем из него имя и ссылку в заготовку карточки
-//после чего добавляем карточку
-initialCards.forEach((card) => {
-  const result = createPlacesItemElement(card.name, card.link);
-  placesItemWrapper.append(result);
-});
 
-export {submitAddCardForm, createPlacesItemElement, placesItemWrapper}
-
-// //вешаем слушатель на весь блок и при натажии на лайк проставляем его
-// songsContainer.addEventListener('click', function (evt) {
-//   if (evt.target.classList.contains('song__like')) {
-//     evt.target.classList.toggle('song__like_active');
-//   };
-// });
+export {submitAddCardForm, createPlacesItemElement, placesItemWrapper, renderDeleteButtonCard}

@@ -28,6 +28,7 @@
       </section>
       <section class="places">
         <div class="places__wrapper">
+          <h2 id="places-load-error" class="places__load-error" hidden>Ошибка загрузки</h2>
           <template id="places__item">
             <div class="places__item">
               <img class="places__item-img" src="./images/dombay.jpg" alt="Фотография места">
@@ -35,6 +36,8 @@
                 Домбай
               </h2>
               <button id="like-button" type="button" class="places__item-button"></button>
+              <p class="places__item-like-number"></p>
+
               <button id="trash-button" type="button" class="places__trash-button"></button>
             </div>
           </template>
@@ -56,9 +59,9 @@
         </h2>
         <fieldset class="popup__form-items">
           <input id="popup_input_edit_profile_username" name="popup_input_edit_profile_username" class="popup__form-input" type="text" value="Жак-Ив Кусто" placeholder="Введите имя" required minlength="2" maxlength="40">
-          <span id="popup_input_edit_profile_username-error" class="popup__error-span"></span>
+          <span id="popup_input_edit_profile_username-error" class="popup__error-span" hidden></span>
           <input id="popup_input_edit_profile_job-description" name="popup_input_edit_profile_job-description" class="popup__form-input" type="text" value="Исследователь океана" placeholder="Укажите занятие" required minlength="2" maxlength="200">
-          <span id="popup_input_edit_profile_job-description-error" class="popup__error-span"></span>
+          <span id="popup_input_edit_profile_job-description-error" class="popup__error-span" hidden></span>
           <button id="edit_profile_button" type="submit" class="popup__form-button">Сохранить</button>
         </fieldset>
       </form>
@@ -73,9 +76,9 @@
         </h2>
         <fieldset class="popup__form-items">
           <input id="popup_input_add_place_name" name="popup_input_add_place_name" class="popup__form-input" type="text" placeholder="Название" required minlength="2" maxlength="30">
-          <span id="popup_input_add_place_name-error" class="popup__error-span"></span>
+          <span id="popup_input_add_place_name-error" class="popup__error-span" hidden></span>
           <input id="popup_input_add_place_link" name="popup_input_add_place_link" class="popup__form-input" type="url" placeholder="Ссылка на картинку" required>
-          <span id="popup_input_add_place_link-error" class="popup__error-span"></span>
+          <span id="popup_input_add_place_link-error" class="popup__error-span" hidden></span>
           <button id="add_place_button" type="submit" class="popup__form-button">Создать</button>
         </fieldset>
       </form>
@@ -89,7 +92,7 @@
     </div>
 
   </section>
-  <!-- <script type="module" src="./index.js"></script> -->
+  <script type="module" src="./components/index.js"></script>
 
 </body>
 </html>

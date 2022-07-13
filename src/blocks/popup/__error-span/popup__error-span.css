@@ -1,6 +1,7 @@
 .popup__error-span {
   width: 100%;
-  margin: 0;
+  padding: 5px 0 0 0;
+  margin-bottom: 10px;
   border: none;
   font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
@@ -8,6 +9,8 @@
   font-size: 12px;
   line-height: 14.5px;
   color: red;
-  padding-top: 5px;
+}
+
+.popup__error-span:last-of-type {
   margin-bottom: 30px;
 }
