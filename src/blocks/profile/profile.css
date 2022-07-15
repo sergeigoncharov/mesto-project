@@ -1,6 +1,7 @@
 .profile {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 @media all and (max-width: 768px){

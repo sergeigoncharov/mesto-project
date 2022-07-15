@@ -100,6 +100,20 @@ const editProfile = function (cohort, name, job) {
   });
 }
 
+//постим на сервер изменения аватара
+const editAvatar = function (cohort, avatar) {
+  fetch(`https://nomoreparties.co/v1/${cohort}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: {
+      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      avatar: `${avatar}`,
+    })
+  });
+}
+
 //постим карточки на сервер
 const postCardRequest = function (cohort, name, link) {
   fetch(`https://nomoreparties.co/v1/${cohort}/cards`, {
@@ -187,4 +201,4 @@ const deleteLikeCardRequest = function (cohort, id) {
 getCards(cohort)
 getProfile(cohort)
 
-export { editProfile, cohort, postCardRequest, putLikeCardRequest, deleteLikeCardRequest }
+export { editProfile, cohort, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, editAvatar }

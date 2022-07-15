@@ -1,7 +1,8 @@
 //функции работы модальных окон
 
 import { submitAddCardForm } from "./card.js";
-import { cohort, editProfile } from "./requests.js";
+import { cohort, editProfile, editAvatar } from "./api.js";
+import { config, resetError } from "./validate.js"
 
 //находим аватар
 const profileAvatar = document.querySelector('.profile__avatar');
@@ -23,6 +24,11 @@ const profileJobEdit = document.querySelector('#popup_input_edit_profile_job-des
 //переменная для попапа редактирования профиля
 const popupEditProfile = document.querySelector('#edit-profile');
 
+//переменная для работы с аватаром
+const popupEditAvatar = document.querySelector('#edit-avatar');
+const avatarEditPosition = document.querySelector('.profile__avatar-img');
+const avatarEditButton = document.querySelector('#profile__info-avatar');
+
 function openPopupAction (popup) {
   popup.classList.add('popup_opened');
 
@@ -30,47 +36,33 @@ function openPopupAction (popup) {
   document.addEventListener("mousedown", closePopupOverlayAction);
 };
 
-//элементы которые отображаются ошибки валидации для попапа редактирования профиля
-const inputProfileJobDescription = document.querySelector('#popup_input_edit_profile_job-description')
-const inputProfileName = document.querySelector('#popup_input_edit_profile_username')
-const errorInputProfileJobDescription = document.querySelector('#popup_input_edit_profile_job-description-error')
-const errorInputProfileName = document.querySelector('#popup_input_edit_profile_username-error')
-
-//элементы которые отображаются ошибки валидации для попапа создания карточки
-const inputPlaceName = document.querySelector('#popup_input_add_place_name')
-const inputPlaceLink = document.querySelector('#popup_input_add_place_link')
-const errorinputPlaceName = document.querySelector('#popup_input_add_place_name-error')
-const errorInputPlaceLink = document.querySelector('#popup_input_add_place_link-error')
-
 
 function closePopupAction (popup) {
   popup.classList.remove('popup_opened');
-  //сбрасываем форму добавлен карточки
-  formAddPlaceElement.reset();
-  //выключаем кнопку сабмита
-  submitButtonAddCard.classList.add('popup__form-button_disabled');
-  submitButtonAddCard.setAttribute('disabled', true);
-
-  //очищаем поля и классы ошибок для попапа редактирования профиля
-  errorInputProfileJobDescription.textContent = '';
-  errorInputProfileJobDescription.setAttribute('hidden', true)
-  inputProfileJobDescription.classList.remove('popup__form-input_error');
-  errorInputProfileName.textContent = '';
-  errorInputProfileName.setAttribute('hidden', true)
-  inputProfileName.classList.remove('popup__form-input_error');
-
-  //очищаем поля и классы ошибок для попапа создания нового места
-  errorinputPlaceName.textContent = '';
-  errorinputPlaceName.setAttribute('hidden', true)
-  inputPlaceName.classList.remove('popup__form-input_error');
-  errorInputPlaceLink.textContent = '';
-  errorInputPlaceLink.setAttribute('hidden', true)
-  inputPlaceLink.classList.remove('popup__form-input_error');
-
   document.removeEventListener("keyup", closePopupEscAction);
   document.removeEventListener("mousedown", closePopupOverlayAction);
 };
 
+//слушатель при наведении мыши на аватар
+avatarEditPosition.addEventListener("mouseenter", function () {
+  avatarEditButton.removeAttribute('hidden')
+});
+
+//слушатель, когда мышка не на аватаре
+avatarEditPosition.addEventListener("mouseleave", function () {
+  avatarEditButton.setAttribute('hidden', true)
+});
+
+//октрываем окно редактирования аватара
+avatarEditPosition.addEventListener('click', function () {
+  openPopupAction(popupEditAvatar)
+});
+
+//закрываем окно редактирования аватара
+const avatarCloseButton = document.querySelector('#edit-avatar-close');
+avatarCloseButton.addEventListener('click', function () {
+  closePopupAction(popupEditAvatar)
+});
 
 //октрываем окно редактирования профиля
 const openProfileEditButton = document.querySelector('.profile__info-edit-button');
@@ -83,6 +75,7 @@ openProfileEditButton.addEventListener('click', function () {
 const closeProfileEditButton = document.querySelector('#edit-profile-close');
 closeProfileEditButton.addEventListener('click', function () {
   closePopupAction(popupEditProfile)
+  resetError(popupEditProfile, config)
 });
 
 //функция, которая в попап вставляет имя и занятие со страницы
@@ -105,19 +98,43 @@ function submitEditProfileForm (evt) {
   closePopupAction(popupEditProfile);
 };
 
+//обновляем аватар
+function submitEditAvatar (evt) {
+  const editAvatarImg = document.querySelector('#popup_input_edit_avatar')
+  //сбрасываем браузерные настройки отправки формы
+  evt.preventDefault();
+  avatarEditPosition.src = editAvatarImg.value;
+
+  //отправляем запрос PATCH на обновление данных на сервере
+  editAvatar(cohort, editAvatarImg.value)
+
+  //закрываем попап
+  closePopupAction(popupEditAvatar);
+};
+
 //переменная кнопки для попапа добавления карточки места
 const popupAddCard = document.querySelector('#add-place');
+
+//сбрасываем форму добавлен карточки
+function resetFormAddPlace () {
+  formAddPlaceElement.reset();
+  //выключаем кнопку сабмита
+  submitButtonAddCard.classList.add('popup__form-button_disabled');
+  submitButtonAddCard.setAttribute('disabled', true);
+}
 
 //открываем окно добавления места
 const openAddPlaceButton = document.querySelector('.profile__info-add-button');
 openAddPlaceButton.addEventListener('click', function () {
   openPopupAction(popupAddCard)
+  resetFormAddPlace();
 });
 
 //закрываем окно добавления места
 const closeAddPlaceButton = document.querySelector('#add-place-close');
 closeAddPlaceButton.addEventListener('click', function () {
   closePopupAction(popupAddCard)
+  resetError(formAddPlaceElement, config)
 });
 
 
@@ -129,6 +146,13 @@ const formEditProfileElement = document.querySelector('#popup_form_edit_profile'
 
 //сохраняем попап редактирования профиля
 formEditProfileElement.addEventListener('submit', submitEditProfileForm);
+
+//находим форму попапа редактирования аватара
+const formEditAvatar = document.querySelector('#popup_form_edit_avatar');
+
+//сохраняем попап редактирования аватара
+formEditAvatar.addEventListener('submit', submitEditAvatar);
+
 
 //закрываем попап с картинкой
 const closeImgPlaceButton = document.querySelector('#open-place-close');

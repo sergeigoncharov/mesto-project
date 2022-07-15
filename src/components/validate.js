@@ -10,6 +10,12 @@ const config = {
   formFieldsetSelector: '.popup__form-items'
 }
 
+function resetError(formElement, config) {
+  const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
+  // очищаем ошибки валидации
+  inputList.forEach(inputElement => hideInputError(formElement, inputElement, config));
+}
+
 //функция, которая добавляет ошибку, стиль ошибки и сообещение об ошибке
 const showInputError = (formElement, inputElement, errorMessage, config) => {
   //Находим элемент ошибки внутри самой функции
@@ -26,7 +32,6 @@ const showInputError = (formElement, inputElement, errorMessage, config) => {
 const hideInputError = (formElement, inputElement, config) => {
   //Находим элемент ошибки внутри самой функции
   const errorElement = formElement.querySelector(`#${inputElement.id}-error`);
-
   inputElement.classList.remove(config.inputErrorClass);
   errorElement.classList.remove(config.errorClass);
   // Очистим ошибку
@@ -108,3 +113,5 @@ function enableValidation(config) {
 
 
 enableValidation(config);
+
+export { config, resetError }

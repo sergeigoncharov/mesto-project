@@ -29,7 +29,10 @@
     </header>
     <main class="content">
       <section class="profile">
-        <img class="profile__avatar" src="./images/avatar.jpg" alt="Аватар">
+        <div class="profile__avatar">
+          <button id="profile__info-avatar" type="button" class="profile__avatar-edit-button" hidden></button>
+          <img class="profile__avatar-img" src="./images/avatar.jpg" alt="Аватар">
+        </div>
         <div class="profile__info">
           <h1 class="profile__info-username">
           </h1>
@@ -59,7 +62,7 @@
     </main>
     <footer class="footer">
       <p class="footer__text">
-        &copy; 2020 Mesto Russia
+        &copy; 2022 Mesto Russia
       </p>
     </footer>
   </div>
@@ -103,7 +106,22 @@
       <img class="popup__img" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg" alt="Байкал">
       <p class="popup__description"></p>
     </div>
+  </section>
 
+  <section id="edit-avatar" class="popup">
+    <div class="popup__content">
+      <button id="edit-avatar-close" type="button" class="popup__close"></button>
+      <form id="popup_form_edit_avatar" name="popup_form_edit_avatar" class="popup__form">
+        <h2 class="popup__title">
+          Обновить аватар
+        </h2>
+        <fieldset class="popup__form-items">
+          <input id="popup_input_edit_avatar" name="popup_input_edit_avatar" class="popup__form-input" type="url" placeholder="Ссылка на аватар" required>
+          <span id="popup_input_edit_avatar-error" class="popup__error-span" hidden></span>
+          <button id="edit_avatar_button" type="submit" class="popup__form-button">Сохранить</button>
+        </fieldset>
+      </form>
+    </div>
   </section>
   <script type="module" src="./components/index.js"></script>
 

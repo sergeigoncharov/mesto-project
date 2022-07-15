@@ -1,7 +1,7 @@
 //функции для работы с карточками
 
 import { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, formAddPlaceElement } from "./modal.js";
-import { cohort, postCardRequest, putLikeCardRequest, deleteLikeCardRequest } from "./requests.js"
+import { cohort, postCardRequest, putLikeCardRequest, deleteLikeCardRequest } from "./api.js"
 
 //переменные для изображения и описания в попапе картинки карточки
 const popupImage = document.querySelector('.popup__img');
