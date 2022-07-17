@@ -1,7 +1,7 @@
 //функции работы модальных окон
 
 import { submitAddCardForm } from "./card.js";
-import { cohort, editProfile, editAvatar } from "./api.js";
+import { cohortId, editProfile, editAvatar, renderLoading } from "./api.js";
 import { config, resetError } from "./validate.js"
 
 //находим аватар
@@ -84,29 +84,36 @@ const fillInFormInputs = function() {
   profileJobEdit.value = profileJob.textContent.trim();
 };
 
+const profileInfoSubmitButton = document.querySelector('#edit_profile_button')
+
 //функция, которая из попапа вставляет имя и занятие на страницу
 function submitEditProfileForm (evt) {
   //сбрасываем браузерные настройки отправки формы
   evt.preventDefault();
+  renderLoading(true, profileInfoSubmitButton)
   profileName.textContent = profileNameEdit.value;
   profileJob.textContent = profileJobEdit.value;
 
   //отправляем запрос PATCH на обновление данных на сервере
-  editProfile(cohort, profileNameEdit.value, profileJobEdit.value)
+  editProfile(cohortId, profileNameEdit.value, profileJobEdit.value)
 
   //закрываем попап
   closePopupAction(popupEditProfile);
 };
 
+const avatarSubmitButton = document.querySelector('#edit_avatar_button')
+
 //обновляем аватар
 function submitEditAvatar (evt) {
   const editAvatarImg = document.querySelector('#popup_input_edit_avatar')
+
   //сбрасываем браузерные настройки отправки формы
   evt.preventDefault();
+  renderLoading(true, avatarSubmitButton)
   avatarEditPosition.src = editAvatarImg.value;
 
   //отправляем запрос PATCH на обновление данных на сервере
-  editAvatar(cohort, editAvatarImg.value)
+  editAvatar(cohortId, editAvatarImg.value)
 
   //закрываем попап
   closePopupAction(popupEditAvatar);
@@ -177,10 +184,13 @@ function closePopupOverlayAction(evt) {
   }
 };
 
-
-
 //сохраняем попап добавления карточки
-formAddPlaceElement.addEventListener('submit', submitAddCardForm);
+formAddPlaceElement.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+  renderLoading(true, submitButtonAddCard)
+  submitAddCardForm()
+
+})
 
 
-export { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, profileName, profileJob, profileAvatar, profileNameEdit, profileJobEdit, formAddPlaceElement }
+export { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, profileName, profileJob, profileAvatar, profileNameEdit, profileJobEdit, formAddPlaceElement, avatarSubmitButton, submitButtonAddCard, profileInfoSubmitButton }

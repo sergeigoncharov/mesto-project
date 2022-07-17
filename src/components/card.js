@@ -1,7 +1,7 @@
 //функции для работы с карточками
 
-import { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, formAddPlaceElement } from "./modal.js";
-import { cohort, postCardRequest, putLikeCardRequest, deleteLikeCardRequest } from "./api.js"
+import { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, formAddPlaceElement, submitButtonAddCard } from "./modal.js";
+import { getProfile, cohortId, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, renderLoading, deleteCardRequest } from "./api.js"
 
 //переменные для изображения и описания в попапе картинки карточки
 const popupImage = document.querySelector('.popup__img');
@@ -17,9 +17,20 @@ const placesItemWrapper = document.querySelector('.places__wrapper');
 const popupNamePlaceValue = document.querySelector('#popup_input_add_place_name');
 const popupLinkPlaceValue = document.querySelector('#popup_input_add_place_link');
 
+  function renderDeleteButtonCard (cohortId, cardId) {
+      getProfile(cohortId)
+      .then((res) => validateResponse(res))
+      .then ((data) => {
+        if (cardId !== data._id) {
+        trashButton.remove()
+      } else {
+        trashButton.classList.add('.places__item-button_enable')
+      }
+      })
+    }
 
 //функция, которая принимает на входи title и img и вставляет в заготовку карточки
-const createPlacesItemElement = function(title, img, likes) {
+const createPlacesItemElement = function(title, img, likes, cardId, ownerId) {
 
   //находим карточку и клонируем
   const elementPlacesItem = placesItemTemplate.querySelector('.places__item').cloneNode(true);
@@ -34,23 +45,33 @@ const createPlacesItemElement = function(title, img, likes) {
   elementPlaceItemImg.alt = title;
   elementPlaceLike.textContent = likes;
 
+  const likeButton = elementPlacesItem.querySelector('.places__item-button')
   //слушаем кнопку с лайком и если на неё клацнули меняем состояние лайка
-  elementPlacesItem.querySelector('.places__item-button').addEventListener('click', function(evt) {
+
+  likeButton.addEventListener('click', function(evt) {
     evt.target.classList.toggle('places__item-button_enable');
     if (elementPlacesItem.querySelector('.places__item-button_enable')) {
-      putLikeCardRequest(cohort, '62cbf1c5bdb1f00a9f09a5b2')
+      putLikeCardRequest(cohortId, cardId)
+      console.log(cardId)
       elementPlaceLike.textContent = likes;
     }
-
        else {
-        deleteLikeCardRequest(cohort, '62cbf1c5bdb1f00a9f09a5b2')
+        deleteLikeCardRequest(cohortId, cardId)
         elementPlaceLike.textContent = likes;
       }
-  });
+  })
+
+  const trashButton = elementPlacesItem.querySelector('.places__trash-button')
+
+
+
+  renderDeleteButtonCard(cohortId, cardId)
 
   //слушаем кнопку с корзинкой и если на неё клацнули удалем карточку
-  elementPlacesItem.querySelector('.places__trash-button').addEventListener('click', function(evt) {
+  trashButton.addEventListener('click', function(evt) {
+    deleteCardRequest(cohortId, cardId)
     evt.target.closest('.places__item').remove();
+
   });
 
   //слушаем картинку на странице и если на неё клацнули, то открывем попап
@@ -65,31 +86,24 @@ const createPlacesItemElement = function(title, img, likes) {
 
 };
 
-const renderDeleteButtonCard = function (id) {
-  const profileId ='61d01a9944878b71edfe84ba'
-  const trashButton = document.querySelector('#trash-button')
-  if (id !== profileId) {
-    trashButton.remove()
-  } else {
-    trashButton.classList.add('.places__item-button_enable')
-  }
-}
+
 
 
 //функция, которая добавляет карточку на страницу
-function submitAddCardForm (evt) {
+function submitAddCardForm () {
   const namePlace = popupNamePlaceValue.value;
   const linkPlace = popupLinkPlaceValue.value;
   //сбрасываем браузерные настройки отправки формы
-  evt.preventDefault();
+  // evt.preventDefault();
+  renderLoading(true, submitButtonAddCard)
   //вызываем функцию добавления карточки на страницу
   const addNewCard = createPlacesItemElement(namePlace, linkPlace);
   placesItemWrapper.prepend(addNewCard);
-  postCardRequest (cohort, namePlace, linkPlace);
+  postCardRequest (cohortId, namePlace, linkPlace);
   formAddPlaceElement.reset();
   //закрываем попап
   closePopupAction(popupAddCard);
 };
 
 
-export {submitAddCardForm, createPlacesItemElement, placesItemWrapper, renderDeleteButtonCard}
+export {submitAddCardForm, createPlacesItemElement, placesItemWrapper}

@@ -7,9 +7,11 @@ const config = {
   inactiveButtonClass: 'popup__form-button_disabled',
   inputErrorClass: 'popup__form-input_error',
   errorClass: 'popup__error-span',
-  formFieldsetSelector: '.popup__form-items'
+  formFieldsetSelector: '.popup__form-items',
 }
 
+
+//очищаем ошибки при закрытии попапов
 function resetError(formElement, config) {
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   // очищаем ошибки валидации
