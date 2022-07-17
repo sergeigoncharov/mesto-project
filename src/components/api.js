@@ -40,27 +40,16 @@ const getProfile = function (cohortId) {
 }
 
 //записываем айдишник профиля в переменную profileId
-Promise.all([getProfile(cohortId)])
-.then(res => Promise.all([res[0].json()]))
-.then (([data]) => {
-  profileId = data._id;
-})
+getProfile(cohortId)
+  .then((res) => res.json())
 
-console.log(profileId)
+  .then((res) => {
+    profileId = res._id
+  })
 
-//рисуем только на своей карточке кнопку удаления
-// const renderDeleteButtonCard = function (cohortId, id) {
-//   getProfile(cohortId)
-//   .then((res) => validateResponse(res))
-//   .then ((data) => {
-//     const trashButton = document.querySelector('#trash-button')
-//     if (id !== data._id) {
-//     trashButton.remove()
-//   } else {
-//     trashButton.classList.add('.places__item-button_enable')
-//   }
-//   })
-// }
+  .catch((err) => {
+    renderProfileDesctiprionError(`Ошибка: ${err}`);
+  })
 
 //рисует профиль на странице
 const renderProfile = function (cohortId) {
@@ -75,8 +64,6 @@ const renderProfile = function (cohortId) {
     renderProfileDesctiprionError(`Ошибка: ${err}`);
   })
 }
-
-
 
 //выводить результат в верстке, если данные пришли и всё хорошо
 function renderProfileDesctiprion(name, about, avatarLink) {
@@ -250,4 +237,4 @@ const deleteLikeCardRequest = function (cohortId, cardId) {
 renderCards(cohortId)
 renderProfile(cohortId)
 
-export { editProfile, cohortId, validateResponse, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, editAvatar, renderLoading, getProfile, deleteCardRequest }
+export { profileId, editProfile, cohortId, validateResponse, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, editAvatar, renderLoading, deleteCardRequest }

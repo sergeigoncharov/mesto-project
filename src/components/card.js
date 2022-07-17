@@ -1,7 +1,7 @@
 //функции для работы с карточками
 
 import { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, formAddPlaceElement, submitButtonAddCard } from "./modal.js";
-import { getProfile, cohortId, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, renderLoading, deleteCardRequest } from "./api.js"
+import { profileId, cohortId, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, renderLoading, deleteCardRequest } from "./api.js"
 
 //переменные для изображения и описания в попапе картинки карточки
 const popupImage = document.querySelector('.popup__img');
@@ -16,18 +16,6 @@ const placesItemWrapper = document.querySelector('.places__wrapper');
 //переменные с именем и ссылкой для добавления карточки
 const popupNamePlaceValue = document.querySelector('#popup_input_add_place_name');
 const popupLinkPlaceValue = document.querySelector('#popup_input_add_place_link');
-
-  function renderDeleteButtonCard (cohortId, cardId) {
-      getProfile(cohortId)
-      .then((res) => validateResponse(res))
-      .then ((data) => {
-        if (cardId !== data._id) {
-        trashButton.remove()
-      } else {
-        trashButton.classList.add('.places__item-button_enable')
-      }
-      })
-    }
 
 //функция, которая принимает на входи title и img и вставляет в заготовку карточки
 const createPlacesItemElement = function(title, img, likes, cardId, ownerId) {
@@ -46,6 +34,7 @@ const createPlacesItemElement = function(title, img, likes, cardId, ownerId) {
   elementPlaceLike.textContent = likes;
 
   const likeButton = elementPlacesItem.querySelector('.places__item-button')
+
   //слушаем кнопку с лайком и если на неё клацнули меняем состояние лайка
 
   likeButton.addEventListener('click', function(evt) {
@@ -63,9 +52,11 @@ const createPlacesItemElement = function(title, img, likes, cardId, ownerId) {
 
   const trashButton = elementPlacesItem.querySelector('.places__trash-button')
 
-
-
-  renderDeleteButtonCard(cohortId, cardId)
+  if (ownerId !== profileId) {
+    trashButton.remove()
+    } else {
+      trashButton.classList.add('.places__item-button_enable')
+  }
 
   //слушаем кнопку с корзинкой и если на неё клацнули удалем карточку
   trashButton.addEventListener('click', function(evt) {
