@@ -1,240 +1,93 @@
-import { profileName, profileJob, profileAvatar, avatarSubmitButton, submitButtonAddCard, profileInfoSubmitButton } from "./modal.js";
-import { createPlacesItemElement, placesItemWrapper } from "./card.js";
-
-const cohortId = 'plus-cohort-12';
-const placesRenderError = document.querySelector('#places-load-error');
-
+import { config } from "./utils.js";
 
 //валидиурем ответы: если все загрузилось: парсим в json, если нет, то реджектим ошибку со статусом
-const validateResponse = function (res) {
-    if (res.ok) {
-      return res.json();
-    }
-      return Promise.reject(res.status);
-}
-
-//отрисовываем ошибку на странице если всё плохо
-function renderCardError(err) {
-  placesRenderError.removeAttribute('hidden')
-  placesRenderError.textContent = err;
-}
-
-//показываем Сохранить... пока грузятся данные
-function renderLoading(isLoading, button) {
-  if(isLoading) {
-    button.textContent = 'Сохранить...'
+const validateResponse = (res) => {
+  if (res.ok) {
+    return res.json();
   } else {
-    button.textContent = 'Сохранить'
-  }
-}
-
-let profileId = "";
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+};
 
 //загружаем профиль с сервера
-const getProfile = function (cohortId) {
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a'
-    }
+const getProfile = () => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    headers: config.headers
   })
+  .then(res => validateResponse(res));
 }
-
-//записываем айдишник профиля в переменную profileId
-getProfile(cohortId)
-  .then((res) => res.json())
-
-  .then((res) => {
-    profileId = res._id
-  })
-
-  .catch((err) => {
-    renderProfileDesctiprionError(`Ошибка: ${err}`);
-  })
-
-//рисует профиль на странице
-const renderProfile = function (cohortId) {
-  getProfile(cohortId)
-  .then((res) => validateResponse(res))
-
-  .then((data) => {
-    renderProfileDesctiprion(data.name, data.about, data.avatar);
-  })
-
-  .catch((err) => {
-    renderProfileDesctiprionError(`Ошибка: ${err}`);
-  })
-}
-
-//выводить результат в верстке, если данные пришли и всё хорошо
-function renderProfileDesctiprion(name, about, avatarLink) {
-  profileName.textContent = name;
-  profileJob.textContent = about;
-  profileAvatar.src = avatarLink;
-  profileAvatar.alt = name;
-}
-
-//рисуем ошибку прям в верстке, если с данными беда
-function renderProfileDesctiprionError(err) {
-  profileName.textContent = err;
-  profileJob.textContent = err;
-}
-
 
 //запрос карточек с сервера
-const getCards = function (cohortId) {
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/cards`, {
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a'
-    }
+const getCards = () => {
+  return fetch(`${config.baseUrl}/cards`, {
+    headers: config.headers
   })
+  .then(res => validateResponse(res));
 }
-
-
-//на будущее: не победил собрать в одной функции сравнение айдишников карточки и профиля
-//вместо неё использу renderDeleteButtonCard
-// let promise = [getCards(cohortId), getProfile(cohortId)]
-// Promise.all(promise)
-// .then(res => Promise.all([res[0].json(),res[1].json()]))
-// .then (([result1, result2]) => {
-//   result1.forEach((data) => {
-//     data.owner._id
-//   })
-//    console.log(result2._id)
-//    console.log(result1.data.owner._id)
-// })
-
-//отрисовываем карточки на странице
-const renderCards = function (cohortId) {
-  getCards(cohortId)
-  .then((res) => validateResponse(res))
-
-  .then((data) => {
-    data.forEach((data) => {
-      const result = createPlacesItemElement(data.name, data.link, data.likes.length, data._id, data.owner._id);
-      placesItemWrapper.append(result);
-      // renderDeleteButtonCard(cohortId, data.owner._id)
-    });
-  })
-
-  .catch((err) => {
-    renderCardError(`Ошибка загрузки: ${err}`)
-  })
-}
-
 
 //постим на сервер изменения профиля
-const editProfile = function (cohortId, name, job) {
-  fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
+const editProfile = (name, job) => {
+  return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: `${name}`,
       about: `${job}`
     })
   })
-  .then((res) => validateResponse(res))
-  .finally(() => {
-    renderLoading(false, profileInfoSubmitButton)
-  })
-
-}
+  .then(res => validateResponse(res));
+};
 
 //постим на сервер изменения аватара
-const editAvatar = function (cohortId, avatar) {
-  fetch(`https://nomoreparties.co/v1/${cohortId}/users/me/avatar`, {
+const editAvatar = (avatar) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
-      avatar: `${avatar}`,
+      avatar: `${avatar}`
     })
   })
-  .then((res) => validateResponse(res))
-  .finally(() => {
-    renderLoading(false, avatarSubmitButton)
-  })
+  .then(res => validateResponse(res));
 }
 
 //постим карточки на сервер
-const postCardRequest = function (cohortId, name, link) {
-  fetch(`https://nomoreparties.co/v1/${cohortId}/cards`, {
+const postCardRequest = (name, link) => {
+  return fetch(`${config.baseUrl}/cards`, {
     method: 'POST',
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: `${name}`,
       link: `${link}`
     })
   })
-  .then((res) => validateResponse(res))
-  .finally(() => {
-    renderLoading(false, submitButtonAddCard)
-  })
+  .then(res => validateResponse(res));
 }
 
-const deleteCardRequest = function (cohortId, cardId) {
- fetch(`https://nomoreparties.co/v1/${cohortId}/cards/${cardId}`, {
+//удаляем карточки с сервера
+const deleteCardRequest = (cardId) => {
+ return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
-      'Content-Type': 'application/json'
-    }
+    headers: config.headers
   })
-    .then((res) => validateResponse(res))
-
-    .catch((err) => {
-      renderCardError(`Ошибка загрузки: ${err}`)
-    })
+  .then(res => validateResponse(res));
 };
 
-
-const putLikeCardRequest = function (cohortId, cardId) {
-  fetch(`https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`, {
+//ставим лайк
+const putLikeCardRequest = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
-      'Content-Type': 'application/json'
-    }
+    headers: config.headers
 })
-  .then((res) => validateResponse(res))
+  .then(res => validateResponse(res));
+}
 
-  .then((data) => {
-    data.likes.length
-  })
-
-  .catch((err) => {
-    renderCardError(`Ошибка загрузки: ${err}`)
-  })
-};
-
-const deleteLikeCardRequest = function (cohortId, cardId) {
-  fetch(`https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`, {
+//удаляем лайк
+const deleteLikeCardRequest = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'DELETE',
-    headers: {
-      authorization: 'd8fbbcc2-3bb7-48f3-924d-a13fe0bb203a',
-      'Content-Type': 'application/json'
-    }})
-
-    .then((res) => validateResponse(res))
-
-    .then((data) => {
-      data.likes.length
-
-    })
-
-    .catch((err) => {
-      renderCardError(`Ошибка загрузки: ${err}`)
-    })
+    headers: config.headers
+  })
+  .then(res => validateResponse(res));
 };
 
-renderCards(cohortId)
-renderProfile(cohortId)
-
-export { profileId, editProfile, cohortId, validateResponse, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, editAvatar, renderLoading, deleteCardRequest }
+export { getCards, editProfile, validateResponse, postCardRequest, putLikeCardRequest, deleteLikeCardRequest, editAvatar, getProfile, deleteCardRequest }

@@ -18,7 +18,8 @@
 
 @media all and (max-width: 768px) {
   .profile__avatar-edit-button {
-    background-size: 5.25px;
+    left: 50px;
+    top: 50px;
     width: 18px;
     height: 18px;
   }

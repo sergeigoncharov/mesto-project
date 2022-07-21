@@ -1,8 +1,9 @@
 //функции работы модальных окон
 
 import { submitAddCardForm } from "./card.js";
-import { cohortId, editProfile, editAvatar, renderLoading } from "./api.js";
+import { editProfile, editAvatar } from "./api.js";
 import { config, resetError } from "./validate.js"
+import { renderLoading } from "./index.js"
 
 //находим аватар
 const profileAvatar = document.querySelector('.profile__avatar');
@@ -91,14 +92,20 @@ function submitEditProfileForm (evt) {
   //сбрасываем браузерные настройки отправки формы
   evt.preventDefault();
   renderLoading(true, profileInfoSubmitButton)
-  profileName.textContent = profileNameEdit.value;
-  profileJob.textContent = profileJobEdit.value;
 
   //отправляем запрос PATCH на обновление данных на сервере
-  editProfile(cohortId, profileNameEdit.value, profileJobEdit.value)
+  editProfile(profileNameEdit.value, profileJobEdit.value)
+  .then(() => {
+    profileName.textContent = profileNameEdit.value;
+    profileJob.textContent = profileJobEdit.value;
+  })
+  .finally(() => {
+    //заканчиваем рендер загрузки
+    renderLoading(false, profileInfoSubmitButton)
+    //закрываем попап
+    closePopupAction(popupEditProfile)
+  })
 
-  //закрываем попап
-  closePopupAction(popupEditProfile);
 };
 
 const avatarSubmitButton = document.querySelector('#edit_avatar_button')
@@ -110,13 +117,17 @@ function submitEditAvatar (evt) {
   //сбрасываем браузерные настройки отправки формы
   evt.preventDefault();
   renderLoading(true, avatarSubmitButton)
-  avatarEditPosition.src = editAvatarImg.value;
-
   //отправляем запрос PATCH на обновление данных на сервере
-  editAvatar(cohortId, editAvatarImg.value)
-
-  //закрываем попап
-  closePopupAction(popupEditAvatar);
+  editAvatar(editAvatarImg.value)
+  .then(() => {
+    avatarEditPosition.src = editAvatarImg.value;
+  })
+  .finally(() => {
+    //заканчиваем рендер загрузки
+    renderLoading(false, avatarSubmitButton)
+    //закрываем попап
+    closePopupAction(popupEditAvatar)
+  })
 };
 
 //переменная кнопки для попапа добавления карточки места
@@ -189,8 +200,7 @@ formAddPlaceElement.addEventListener('submit', function (evt) {
   evt.preventDefault();
   renderLoading(true, submitButtonAddCard)
   submitAddCardForm()
-
 })
 
 
-export { openPopupAction, closePopupAction, popupZoomImage, popupAddCard, profileName, profileJob, profileAvatar, profileNameEdit, profileJobEdit, formAddPlaceElement, avatarSubmitButton, submitButtonAddCard, profileInfoSubmitButton }
+export { avatarEditPosition, openPopupAction, closePopupAction, popupZoomImage, popupAddCard, profileName, profileJob, profileAvatar, profileNameEdit, profileJobEdit, formAddPlaceElement, avatarSubmitButton, submitButtonAddCard, profileInfoSubmitButton }
