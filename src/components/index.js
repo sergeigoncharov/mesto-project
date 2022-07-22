@@ -41,7 +41,7 @@ function renderProfileDesctiprionError(err) {
 //отрисовываем карточки на странице
 function renderCards(cards) {
   cards.forEach((data) => {
-    const result = createPlacesItemElement(data.name, data.link, data.likes.length, data._id, data.owner._id);
+    const result = createPlacesItemElement(data.name, data.link, data.likes, data._id, data.owner._id);
     placesItemWrapper.append(result);
   })
 }

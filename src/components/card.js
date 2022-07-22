@@ -42,15 +42,22 @@ const createPlacesItemElement = function(title, img, likes, cardId, ownerId) {
   elementPlaceItemTitle.textContent = title;
   elementPlaceItemImg.src = img;
   elementPlaceItemImg.alt = title;
-  elementPlaceLike.textContent = likes;
+  elementPlaceLike.textContent = likes.length;
 
-
+  //удаляем корзинку если карточка не наша, если наша
   if (ownerId !== profileId) {
     trashButton.remove()
 
     } else {
       trashButton.classList.add('.places__item-button_enable')
   }
+
+  // отображаем лайк, если раньше его ставили
+  for(let i=0; i < likes.length; i++){
+    if(likes[i]._id === profileId){
+      likeButton.classList.add('places__item-button_enable');
+    }}
+
   //слушаем кнопку с лайком и если на неё клацнули меняем сердечко
   likeButton.addEventListener('click', () => switchedLike(elementPlacesItem, likeButton, elementPlaceLike, cardId))
 
@@ -120,13 +127,13 @@ function submitAddCardForm () {
   .then((data) => {
     const result = createPlacesItemElement(data.name, data.link, data.likes.length, data._id, data.owner._id);
     placesItemWrapper.prepend(result);
+    //закрываем попап
+    closePopupAction(popupAddCard);
   })
 
   .finally(() => {
     //заканчиваем рендер загрузки
     renderLoading(false, submitButtonAddCard)
-    //закрываем попап
-    closePopupAction(popupAddCard);
   })
 
   formAddPlaceElement.reset();

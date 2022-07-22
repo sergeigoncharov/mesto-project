@@ -98,12 +98,12 @@ function submitEditProfileForm (evt) {
   .then(() => {
     profileName.textContent = profileNameEdit.value;
     profileJob.textContent = profileJobEdit.value;
+    //закрываем попап
+    closePopupAction(popupEditProfile)
   })
   .finally(() => {
     //заканчиваем рендер загрузки
     renderLoading(false, profileInfoSubmitButton)
-    //закрываем попап
-    closePopupAction(popupEditProfile)
   })
 
 };
@@ -121,12 +121,12 @@ function submitEditAvatar (evt) {
   editAvatar(editAvatarImg.value)
   .then(() => {
     avatarEditPosition.src = editAvatarImg.value;
+    //закрываем попап
+    closePopupAction(popupEditAvatar)
   })
   .finally(() => {
     //заканчиваем рендер загрузки
     renderLoading(false, avatarSubmitButton)
-    //закрываем попап
-    closePopupAction(popupEditAvatar)
   })
 };
 
